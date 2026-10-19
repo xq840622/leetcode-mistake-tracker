@@ -1,0 +1,358 @@
+{
+  "name": "leetcode-mistake-tracker",
+  "displayName": "LeetCode 错题本 (Mistake Tracker)",
+  "description": "独立一站式刷题插件：打开题目、提交、断点调试、执行回放、错题自动记录、AI 归因、错题 markdown 笔记、题单管理",
+  "version": "0.20.0",
+  "publisher": "liuqiang-local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xq840622/leetcode-mistake-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xq840622/leetcode-mistake-tracker/issues"
+  },
+  "homepage": "https://github.com/xq840622/leetcode-mistake-tracker#readme",
+  "categories": [
+    "Education",
+    "Other"
+  ],
+  "keywords": [
+    "leetcode",
+    "algorithm",
+    "刷题",
+    "算法",
+    "错题本",
+    "mistake tracker"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:python",
+    "workspaceContains:leetcode/editor/cn"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "lmt.recordResult",
+        "title": "错题本: 记录本次提交结果",
+        "icon": "$(pencil)"
+      },
+      {
+        "command": "lmt.analyze",
+        "title": "错题本: AI 归因当前题",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "lmt.analyzeAll",
+        "title": "错题本: AI 归因全部错题",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "lmt.debugCurrent",
+        "title": "错题本: 断点调试当前题",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "lmt.startProblem",
+        "title": "错题本: 打开题目（搜全题库，本地生成文件）",
+        "icon": "$(notebook)"
+      },
+      {
+        "command": "lmt.submit",
+        "title": "错题本: 提交当前题",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "lmt.resetProblem",
+        "title": "错题本: 重置代码区（恢复初始模板）",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "lmt.visualizeCurrent",
+        "title": "错题本: 可视化回放当前题执行（Python Tutor 式）",
+        "icon": "$(inspect)"
+      },
+      {
+        "command": "lmt.sync",
+        "title": "错题本: 同步 LeetCode 提交记录",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "lmt.refreshCookie",
+        "title": "错题本: 一键续期 Cookie（同时配置 labuladong）",
+        "icon": "$(key)"
+      },
+      {
+        "command": "lmt.configAi",
+        "title": "错题本: 配置 AI 归因（端点 / Key / 模型）"
+      },
+      {
+        "command": "lmt.configProblemsDir",
+        "title": "错题本: 配置题目目录（题目文件生成在哪）"
+      },
+      {
+        "command": "lmt.configNotesDir",
+        "title": "错题本: 配置错题 md 目录"
+      },
+      {
+        "command": "lmt.configAiPrompt",
+        "title": "错题本: 自定义 AI 归因提示词"
+      },
+      {
+        "command": "lmt.exportNotes",
+        "title": "错题本: 导出错题 markdown",
+        "icon": "$(export)"
+      },
+      {
+        "command": "lmt.openDashboard",
+        "title": "错题本: 打开统计仪表盘",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "lmt.openProblem",
+        "title": "错题本: 打开题目"
+      },
+      {
+        "command": "lmt.refreshTree",
+        "title": "错题本: 刷新题单",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "lmt.importList",
+        "title": "错题本: 导入题单（读剪贴板/文件，自动识别题号·题名·slug·URL）",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "lmt.removeFromList",
+        "title": "错题本: 从题单移除",
+        "icon": "$(remove)"
+      },
+      {
+        "command": "lmt.renameList",
+        "title": "错题本: 重命名题单",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "lmt.deleteList",
+        "title": "错题本: 删除题单",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "lmt.fetchAllQuestions",
+        "title": "错题本: 拉取全量题库缓存",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "lmt.refreshFavorites",
+        "title": "错题本: 刷新 LeetCode 题单（我的收藏/自建）",
+        "icon": "$(cloud-download)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "lmt.recordResult",
+        "key": "ctrl+cmd+l",
+        "mac": "ctrl+cmd+l"
+      },
+      {
+        "command": "lmt.analyze",
+        "key": "ctrl+cmd+k",
+        "mac": "ctrl+cmd+k"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "lmt-sidebar",
+          "title": "LeetCode 错题本",
+          "icon": "media/book.svg"
+        }
+      ]
+    },
+    "views": {
+      "lmt-sidebar": [
+        {
+          "id": "lmt.overview",
+          "name": "概览"
+        },
+        {
+          "id": "lmt.listsTree",
+          "name": "题单（LeetCode 我的/收藏的 / 导入 / 热题100 / 难度 / 全部）"
+        },
+        {
+          "id": "lmt.records",
+          "name": "记录与整理"
+        },
+        {
+          "id": "lmt.settings",
+          "name": "设置"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "lmt.importList",
+          "group": "navigation@1",
+          "when": "view == lmt.listsTree"
+        },
+        {
+          "command": "lmt.refreshTree",
+          "group": "navigation@2",
+          "when": "view == lmt.listsTree"
+        },
+        {
+          "command": "lmt.sync",
+          "group": "navigation@3",
+          "when": "view == lmt.listsTree"
+        },
+        {
+          "command": "lmt.openDashboard",
+          "group": "navigation@4",
+          "when": "view == lmt.listsTree"
+        },
+        {
+          "command": "lmt.sync",
+          "group": "navigation",
+          "when": "view == lmt.records"
+        },
+        {
+          "command": "lmt.analyzeAll",
+          "group": "navigation",
+          "when": "view == lmt.records"
+        },
+        {
+          "command": "lmt.refreshCookie",
+          "group": "navigation",
+          "when": "view == lmt.records"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "lmt.submit",
+          "group": "navigation",
+          "when": "lmt.isProblemFile"
+        },
+        {
+          "command": "lmt.resetProblem",
+          "group": "navigation",
+          "when": "lmt.isProblemFile"
+        },
+        {
+          "command": "lmt.debugCurrent",
+          "group": "navigation",
+          "when": "lmt.isProblemFile"
+        },
+        {
+          "command": "lmt.visualizeCurrent",
+          "group": "navigation",
+          "when": "lmt.isProblemFile"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "lmt.startProblem",
+          "when": "view == lmt.listsTree && viewItem =~ /problem/",
+          "group": "inline"
+        },
+        {
+          "command": "lmt.recordResult",
+          "when": "view == lmt.listsTree && viewItem =~ /problem/",
+          "group": "inline"
+        },
+        {
+          "command": "lmt.analyze",
+          "when": "view == lmt.listsTree && viewItem =~ /problem/",
+          "group": "inline"
+        },
+        {
+          "command": "lmt.openProblem",
+          "when": "view == lmt.listsTree && viewItem =~ /problem/",
+          "group": "1_open@2"
+        },
+        {
+          "command": "lmt.removeFromList",
+          "when": "view == lmt.listsTree && viewItem == problemInList",
+          "group": "2_list@2"
+        },
+        {
+          "command": "lmt.renameList",
+          "when": "view == lmt.listsTree && viewItem == list",
+          "group": "3_manage@1"
+        },
+        {
+          "command": "lmt.deleteList",
+          "when": "view == lmt.listsTree && viewItem == list",
+          "group": "3_manage@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "LeetCode 错题本",
+      "properties": {
+        "lmt.leetcodeCookie": {
+          "type": "string",
+          "default": "",
+          "description": "leetcode.cn 的 Cookie（浏览器登录后复制整段，用于自动同步提交记录；留空则只用手动记录）"
+        },
+        "lmt.aiBaseUrl": {
+          "type": "string",
+          "default": "https://open.bigmodel.cn/api/paas/v4",
+          "description": "AI 归因使用的 OpenAI 兼容端点（chat/completions 会自动拼接）"
+        },
+        "lmt.aiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "AI 归因的 API Key（注意：会以明文存储于本机 VSCode 设置）"
+        },
+        "lmt.aiModel": {
+          "type": "string",
+          "default": "",
+          "description": "AI 归因模型名，例如 glm-4.6"
+        },
+        "lmt.aiPrompt": {
+          "type": "string",
+          "default": "",
+          "description": "自定义 AI 归因的 system 提示词；留空使用内置默认。会整体替换默认提示词，但仍必须要求模型只输出 {\"type\",\"summary\",\"fixHint\"} 的 JSON，否则结果无法解析。侧边栏「设置 → AI 提示词」可一键复制默认全文再改"
+        },
+        "lmt.notesDirPath": {
+          "type": "string",
+          "default": "",
+          "description": "错题 md 笔记的存放目录；留空则在首次导出时弹目录选择。旧 Obsidian 配置（vault+子目录）自动沿用"
+        },
+        "lmt.autoSyncMinutes": {
+          "type": "number",
+          "default": 15,
+          "description": "自动同步间隔（分钟），0 = 关闭。此外：保存/打开题目文件、窗口聚焦、启动时也会自动静默同步，提交后无需任何手动操作"
+        },
+        "lmt.autoAnalyzePerSync": {
+          "type": "number",
+          "default": 5,
+          "description": "每次自动同步后最多自动 AI 归因的错题数（0 = 关闭自动归因，只用按钮手动归因）"
+        },
+        "lmt.problemsDir": {
+          "type": "string",
+          "default": "",
+          "description": "题目文件根目录（其下用 leetcode/editor/cn 结构）。留空 = 自动：labuladong 工作区 > 当前工作区 > 用户主目录"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.1.0",
+    "typescript": "^5.4.0"
+  }
+}
