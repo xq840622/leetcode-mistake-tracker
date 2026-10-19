@@ -3,7 +3,7 @@
   "displayName": "LeetCode 错题本 (Mistake Tracker)",
   "description": "独立一站式刷题插件：打开题目、提交、断点调试、执行回放、错题自动记录、AI 归因、错题 markdown 笔记、题单管理",
   "version": "0.20.0",
-  "publisher": "liuqiang-local",
+  "publisher": "xq840622",
   "engines": {
     "vscode": "^1.85.0"
   },

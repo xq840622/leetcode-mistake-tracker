@@ -23,19 +23,32 @@ code --install-extension leetcode-mistake-tracker-<版本>.vsix
 
 ## 首次发布到商店
 
-1. （一次性）登录 GitHub CLI 并创建公开仓库、推送：
+### 主路线：Open VSX（无需信用卡）
+
+2026 年起官方 Marketplace 的新发布流程要求新建 Azure DevOps 组织必须绑定 Azure 订阅（免费试用也需信用卡验证），暂不可行；Open VSX（Eclipse 基金会，Cursor / VSCodium / Windsurf / Gitpod 等从中拉取扩展）用 GitHub 账号即可发布：
+
+1. 打开 https://open-vsx.org → 登录（GitHub 授权，自动关联 Eclipse Foundation 账号）
+2. 若提示 claim namespace，认领 `xq840622`（与 `package.json` 的 `publisher` 一致）
+3. 头像 → Settings → Access Tokens → 生成 token
+4. 发布：
 
    ```bash
-   gh auth login            # 浏览器授权
-   gh repo create leetcode-mistake-tracker --public --source=. --push
+   npm run compile && npx @vscode/vsce package
+   npx ovsx publish leetcode-mistake-tracker-<版本>.vsix -p <token>
    ```
 
-   `package.json` 已填好 `repository` / `bugs` / `homepage`（`xq840622/leetcode-mistake-tracker`）。
+   （token 只出现一次；也可 `npx ovsx login` 存到本机钥匙串后直接 `npx ovsx publish`）
 
-2. （一次性）注册 publisher 并登录 vsce：
+### 补充渠道：GitHub Release 挂 vsix（官方 VSCode 用户手动安装）
 
-   - 在 https://marketplace.visualstudio.com/manage 用 GitHub 账号登录，创建 publisher（或 `npx @vscode/vsce create-publisher <名字>`）
-   - 把 `package.json` 的 `publisher` 从 `liuqiang-local` 改为该 ID
-   - `npx @vscode/vsce login <名字>`（粘贴 Personal Access Token，见 https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token）
+`gh auth login` 后：
 
-3. 发布：`npx @vscode/vsce publish`（minor 版本号自动 +1，或手动改 `package.json`）
+```bash
+gh release create v<版本> leetcode-mistake-tracker-<版本>.vsix --title "v<版本>" --notes "见 CHANGELOG.md"
+```
+
+### 官方 Marketplace（等有信用卡后补）
+
+1. https://marketplace.visualstudio.com/manage 用 Microsoft 账号创建 publisher（流程会引导开通 Azure DevOps 组织，需 Azure 免费试用/订阅验证信用卡；上架后永久免费，无持续扣费）
+2. Azure DevOps → Personal Access Tokens：Organization 选 "All accessible organizations"，Scopes 勾 `Marketplace → Manage`
+3. `npx @vscode/vsce login xq840622`（粘贴 PAT）→ `npx @vscode/vsce publish`
